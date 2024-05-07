@@ -12,80 +12,22 @@ import android.view.SurfaceView
 import kotlin.random.Random
 
 class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
-    enum class DrawingMode {
-        MODE_NORMAL,
-        MODE_TINE,
-        MODE_RANDOM_COLOR
-    }
-    enum class PEN_TYPE {
-        COMB_HORIZONTAL,
-        COMB_VERTICAL,
-        PEN
-    }
+    private val TAG: String = CustomSurfaceView::javaClass.javaClass.simpleName
+
 
     private lateinit var firstPoint: PointF
 
     // Variable to store the current drawing mode
     private var currentDrawingMode = DrawingMode.MODE_NORMAL
     private var currentCombType: PEN_TYPE? = PEN_TYPE.PEN
-    private val TAG: String = CustomSurfaceView::javaClass.javaClass.simpleName
     private var drawingThread: DrawingThread? = null
     private var drops: MutableList<Drop>? = null
     private var lastX:Float? = null
     private var lastY:Float? = null
-    private var palette: MutableList<Int> = mutableListOf(
-        Color.rgb(255, 0, 0),
-        Color.rgb(0, 255, 0),
-        Color.rgb(0, 0, 255),
-        Color.rgb(255, 255, 0),
-        Color.rgb(255, 0, 255),
-        Color.rgb(0, 255, 255),
-        Color.rgb(128, 0, 0),
-        Color.rgb(0, 128, 0),
-        Color.rgb(0, 0, 128),
-        Color.rgb(128, 128, 0),
-        Color.rgb(128, 0, 128),
-        Color.rgb(0, 128, 128),
-        Color.rgb(255, 128, 0),
-        Color.rgb(0, 255, 128),
-        Color.rgb(128, 255, 0),
-        Color.rgb(0, 128, 255),
-        Color.rgb(255, 0, 128),
-        Color.rgb(128, 0, 255),
-        Color.rgb(255, 128, 128),
-        Color.rgb(128, 255, 128),
-        Color.rgb(128, 128, 255),
-        Color.rgb(255, 255, 128),
-        Color.rgb(255, 128, 255),
-        Color.rgb(128, 255, 255),
-        Color.rgb(192, 0, 0),
-        Color.rgb(0, 192, 0),
-        Color.rgb(0, 0, 192),
-        Color.rgb(192, 192, 0),
-        Color.rgb(192, 0, 192),
-        Color.rgb(0, 192, 192),
-        Color.rgb(192, 192, 192),
-        Color.rgb(128, 128, 128),
-        Color.rgb(64, 64, 64),
-        Color.rgb(255, 255, 255),
-        Color.rgb(255, 0, 0),
-        Color.rgb(0, 255, 0),
-        Color.rgb(0, 0, 255),
-        Color.rgb(255, 255, 0),
-        Color.rgb(255, 0, 255),
-        Color.rgb(0, 255, 255),
-        Color.rgb(128, 0, 0),
-        Color.rgb(0, 128, 0),
-        Color.rgb(0, 0, 128),
-        Color.rgb(128, 128, 0),
-        Color.rgb(128, 0, 128),
-        Color.rgb(0, 128, 128),
-        Color.rgb(255, 128, 0),
-        Color.rgb(0, 255, 128),
-        Color.rgb(128, 255, 0),
-        Color.rgb(0, 128, 255)
-    )
-    private var bk: Int = Color.rgb(252, 33, 192)
+    private var bk: Int = Color.rgb(252, 255, 255)
+    private var drawingColor: Int = Color.rgb(0, 0, 0)
+    private var isRandomDrawingColor:Boolean = true
+
 
     constructor(context: Context?) : super(context) {
         init()
@@ -133,7 +75,7 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 lastY = y
                 if(currentDrawingMode == DrawingMode.MODE_NORMAL) {
                     val paint = Paint().apply {
-                        color = getRandomColor()
+                        color = if (isRandomDrawingColor) getRandomColor() else drawingColor
                         isAntiAlias = true
                         style = Paint.Style.FILL
                     }
@@ -161,10 +103,10 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                         val vector = PointF((dx / mag).toFloat(), (dy / mag).toFloat())
                         if (currentCombType == PEN_TYPE.COMB_VERTICAL) {
                             for (Xc in 0..width step 100)
-                                tineLine(vector, Xc.toFloat(), 0f, 4f, 32f)
+                                tineLine(vector, Xc.toFloat(), 0f, 2f, 16f)
                         }else if (currentCombType == PEN_TYPE.COMB_HORIZONTAL) {
                             for (Yc in 0..height step 100)
-                                tineLine(vector, 0f, Yc.toFloat(), 4f, 32f)
+                                tineLine(vector, 0f, Yc.toFloat(), 2f, 16f)
                         } else if (currentCombType == PEN_TYPE.PEN){
                             tineLine(vector, X, Y, 4f, 32f)
                         }
@@ -202,7 +144,7 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun getRandomColor(): Int {
-        return palette[Random.nextInt(palette.size)]
+        return drawingPalette[Random.nextInt(drawingPalette.size)]
     }
 
     class DropThread(private var x: Float, private var y: Float, private val paint: Paint, private val addInkCallback: (Float, Float, Float, Paint) -> Unit) : Thread() {
@@ -247,6 +189,28 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     fun setComb(comb: PEN_TYPE) {
         currentCombType = comb
+    }
+
+    fun setBKColor(color: Int) {
+        //the background color of canvas
+        bk=color
+    }
+
+    fun setRandomColor(value:Boolean) {
+        isRandomDrawingColor = value
+    }
+
+    fun isRandomColorActive(): Boolean {
+        return isRandomDrawingColor
+    }
+
+    fun setDrawingColor(color: Int) {
+        isRandomDrawingColor = false
+        drawingColor=color
+    }
+
+    fun isDrawModeActive(): Boolean {
+        return currentDrawingMode == DrawingMode.MODE_NORMAL
     }
 
 }

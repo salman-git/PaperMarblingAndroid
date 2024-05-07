@@ -1,0 +1,78 @@
+package com.meancoder.papermarbeling
+
+import android.graphics.Color
+enum class DrawingMode {
+    MODE_NORMAL,
+    MODE_TINE,
+    MODE_RANDOM_COLOR
+}
+enum class PEN_TYPE {
+    COMB_HORIZONTAL,
+    COMB_VERTICAL,
+    PEN
+}
+val backgroundPalette: MutableList<Int> = mutableListOf(
+    Color.rgb(255,255,255),
+    Color.rgb(255, 255, 204),
+    Color.rgb(204, 255, 255),
+    Color.rgb(255, 204, 255),
+    Color.rgb(255, 230, 204),
+    Color.rgb(204, 255, 204),
+    Color.rgb(255, 204, 204),
+    Color.rgb(255, 255, 153),
+    Color.rgb(204, 255, 153),
+    Color.rgb(255, 204, 153),
+    Color.rgb(204, 204, 255),
+)
+val drawingPalette: MutableList<Int> = mutableListOf(
+    Color.rgb(255, 0, 0),
+    Color.rgb(0, 255, 0),
+    Color.rgb(0, 0, 255),
+    Color.rgb(255, 255, 0),
+    Color.rgb(255, 0, 255),
+    Color.rgb(0, 255, 255),
+    Color.rgb(128, 0, 0),
+    Color.rgb(0, 128, 0),
+    Color.rgb(0, 0, 128),
+    Color.rgb(128, 128, 0),
+    Color.rgb(128, 0, 128),
+    Color.rgb(0, 128, 128),
+    Color.rgb(255, 128, 0),
+    Color.rgb(0, 255, 128),
+    Color.rgb(128, 255, 0),
+    Color.rgb(0, 128, 255),
+    Color.rgb(255, 0, 128),
+    Color.rgb(128, 0, 255),
+    Color.rgb(255, 128, 128),
+    Color.rgb(128, 255, 128),
+    Color.rgb(128, 128, 255),
+    Color.rgb(255, 255, 128),
+    Color.rgb(255, 128, 255),
+    Color.rgb(128, 255, 255),
+    Color.rgb(192, 0, 0),
+    Color.rgb(0, 192, 0),
+    Color.rgb(0, 0, 192),
+    Color.rgb(192, 192, 0),
+    Color.rgb(192, 0, 192),
+    Color.rgb(0, 192, 192),
+    Color.rgb(192, 192, 192),
+    Color.rgb(128, 128, 128),
+    Color.rgb(64, 64, 64),
+    Color.rgb(255, 255, 255),
+    Color.rgb(255, 0, 0),
+    Color.rgb(0, 255, 0),
+    Color.rgb(0, 0, 255),
+    Color.rgb(255, 255, 0),
+    Color.rgb(255, 0, 255),
+    Color.rgb(0, 255, 255),
+    Color.rgb(128, 0, 0),
+    Color.rgb(0, 128, 0),
+    Color.rgb(0, 0, 128),
+    Color.rgb(128, 128, 0),
+    Color.rgb(128, 0, 128),
+    Color.rgb(0, 128, 128),
+    Color.rgb(255, 128, 0),
+    Color.rgb(0, 255, 128),
+    Color.rgb(128, 255, 0),
+    Color.rgb(0, 128, 255)
+)
