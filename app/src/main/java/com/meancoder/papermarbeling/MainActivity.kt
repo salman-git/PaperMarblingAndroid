@@ -74,6 +74,9 @@ class MainActivity : ComponentActivity() {
                         mutableStateOf(CustomSurfaceView(this)) }
 
                     Box(modifier = Modifier.fillMaxSize()) {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Red))
                         AndroidView(factory = { context ->
                             customSurfaceView
                         })
@@ -195,7 +198,6 @@ class MainActivity : ComponentActivity() {
                                 BottomMenu(customSurfaceView)
                             }
                         }
-
                     }
                 }
             }
@@ -342,7 +344,24 @@ class MainActivity : ComponentActivity() {
                     icon = painterResource(id = R.drawable.icon_clear),
                     modifier =Modifier
                 )
+                RoundedButton (
+                    onClick = {
+                        customSurfaceView.undo()
+                        customSurfaceView.undo()
+                    },
+                    icon = painterResource(id = R.drawable.icon_undo),
+                    modifier =Modifier
+                )
+                RoundedButton (
+                    onClick = {
+                        customSurfaceView.redo()
+                        customSurfaceView.redo()
+                    },
+                    icon = painterResource(id = R.drawable.icon_redo),
+                    modifier =Modifier
+                )
                 Spacer(modifier = Modifier.height(20.dp))
+
             }
     }
 
@@ -361,21 +380,35 @@ class MainActivity : ComponentActivity() {
                         customSurfaceView.setComb(PEN_TYPE.COMB_HORIZONTAL)
                     },
                     icon = painterResource(id = R.drawable.icon_horizontal_comb),
-                    modifier =Modifier
+                    modifier = Modifier
                 )
                 RoundedButton (
                     onClick = {
                         customSurfaceView.setComb(PEN_TYPE.COMB_VERTICAL)
                     },
                     icon = painterResource(id = R.drawable.icon_vertical_comb),
-                    modifier =Modifier
+                    modifier = Modifier
                 )
                 RoundedButton (
                     onClick = {
                         customSurfaceView.setComb(PEN_TYPE.PEN)
                     },
                     icon = painterResource(id = R.drawable.icon_pen),
-                    modifier =Modifier
+                    modifier = Modifier
+                )
+                RoundedButton (
+                    onClick = {
+                        customSurfaceView.setComb(PEN_TYPE.CIRCULAR_CLOCKWISE)
+                    },
+                    icon = painterResource(id = R.drawable.icon_clockwise),
+                    modifier = Modifier
+                )
+                RoundedButton (
+                    onClick = {
+                        customSurfaceView.setComb(PEN_TYPE.CIRCULAR_ANTICLOCKWISE)
+                    },
+                    icon = painterResource(id = R.drawable.icon_anticlockwise),
+                    modifier = Modifier
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }

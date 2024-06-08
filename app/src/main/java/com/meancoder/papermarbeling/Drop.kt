@@ -4,6 +4,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
+import androidx.core.graphics.minus
+import java.lang.Math.abs
+import kotlin.math.sqrt
 
 
 class Drop(x: Float, y: Float, r: Float, paint: Paint) {
@@ -27,16 +30,42 @@ class Drop(x: Float, y: Float, r: Float, paint: Paint) {
         }
     }
 
-    fun tine(m: PointF, x: Float, y: Float, z: Float, c: Float) {
+    fun tine(m: PointF, x: Float, y: Float, z: Float, c: Float) { //old
         val u = 1 / Math.pow(2.0, (1 / c).toDouble()).toFloat()
         val b = PointF(x, y)
         for (v in vertices) {
-            val pb = PointF(v.x - b.x, v.y - b.y)
             val n = PointF(m.y, -m.x) // Rotate 90 degrees
+            val pb = v.minus(b)
             val d = Math.abs(pb.x * n.x + pb.y * n.y)
             val mag = z * Math.pow(u.toDouble(), d.toDouble()).toFloat()
             v.x += m.x * mag
             v.y += m.y * mag
+        }
+    }
+
+    fun circularTine(x:Float, y:Float, z:Float, c:Float, r:Float, clockWise:Boolean=true) {
+        val C = PointF(x, y) //center of arc
+        val u = 1 / Math.pow(2.0, (1 / c).toDouble()).toFloat()
+        for (v in vertices) {
+            val mag = sqrt((v.x - C.x) * (v.x - C.x) + (v.y - C.y) * (v.y - C.y))
+            val d = Math.abs(mag - r)
+            val l = z * Math.pow(u.toDouble(), d.toDouble())
+            var alpha = l / mag
+            val translatedX = v.x - C.x
+            val translatedY = v.y - C.y
+
+            if(!clockWise) {
+                alpha *= -1f
+            }
+            // Apply rotation
+            val cosAlpha = Math.cos(alpha)
+            val sinAlpha = Math.sin(alpha)
+            val rotatedX = translatedX * cosAlpha - translatedY * sinAlpha
+            val rotatedY = translatedX * sinAlpha + translatedY * cosAlpha
+
+            // Translate back to original position
+            v.x = (rotatedX + C.x).toFloat()
+            v.y = (rotatedY + C.y).toFloat()
         }
     }
 

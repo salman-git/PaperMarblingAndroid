@@ -9,7 +9,9 @@ enum class DrawingMode {
 enum class PEN_TYPE {
     COMB_HORIZONTAL,
     COMB_VERTICAL,
-    PEN
+    PEN,
+    CIRCULAR_CLOCKWISE,
+    CIRCULAR_ANTICLOCKWISE
 }
 val backgroundPalette: MutableList<Int> = mutableListOf(
     Color.rgb(255,255,255),
