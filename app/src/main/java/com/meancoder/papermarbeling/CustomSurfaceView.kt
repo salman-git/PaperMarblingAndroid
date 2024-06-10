@@ -89,10 +89,7 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                 } else if (currentDrawingMode == DrawingMode.MODE_TINE) {
                     if(currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE || currentTineTool == PEN_TYPE.CIRCULAR_ANTICLOCKWISE) {
                         dropThread = DropThread(x, y, Paint()) { x, y, r, paint ->
-                            if (currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE)
-                                circularTine(x, y, 4f, 32f, 200f, isClockwise = true)
-                            else if (currentTineTool == PEN_TYPE.CIRCULAR_ANTICLOCKWISE)
-                                circularTine(x, y, 4f, 32f, 200f, isClockwise = false)
+                            circularTine(x, y, 4f, 32f, 100f, isClockwise = currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE)
                         }
                         dropThread.start()
                     }
@@ -139,7 +136,7 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                                 xC2 += 100
                             }
                         } else if (currentTineTool == PEN_TYPE.PEN) {
-                            tineLine(vector, X, Y, 4f, 32f)
+                            tineLine(vector, X, Y, 2f, 16f)
                         }
                     }
                     lastX = X

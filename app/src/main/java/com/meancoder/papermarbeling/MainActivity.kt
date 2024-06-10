@@ -97,9 +97,9 @@ class MainActivity : ComponentActivity() {
                                 // Left menu Hide button
                                 Button(
                                     onClick = { isLeftMenuVisible = !isLeftMenuVisible},
-                                    shape = CircleShape,
+                                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp),
                                     modifier = Modifier
-                                        .width(24.dp)
+                                        .width(48.dp)
                                         .background(
                                             Color.Black.copy(0.3f),
                                             RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
@@ -126,9 +126,12 @@ class MainActivity : ComponentActivity() {
                             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                                 Button(
                                     onClick = { isRightMenuVisible = !isRightMenuVisible },
-                                    shape = CircleShape,
+                                    shape = RoundedCornerShape(
+                                        topStart = 16.dp,
+                                        bottomStart = 16.dp
+                                    ),
                                     modifier = Modifier
-                                        .width(24.dp)
+                                        .width(48.dp)
                                         .background(
                                             Color.Black.copy(0.3f),
                                             RoundedCornerShape(
@@ -167,16 +170,19 @@ class MainActivity : ComponentActivity() {
                             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                                 Button(
                                     onClick = { isBottomMenuVisible = !isBottomMenuVisible },
-                                    shape = CircleShape,
+                                    shape = RoundedCornerShape(
+                                        topStart = 16.dp,
+                                        topEnd = 16.dp
+                                    ),
                                     modifier = Modifier
-                                        .width(24.dp)
+                                        .width(48.dp) // Increase the width for better click area
+                                        .height(48.dp) // Ensure height matches the width for a circular shape
                                         .background(
                                             Color.Black.copy(0.3f),
                                             RoundedCornerShape(
                                                 topStart = 16.dp,
                                                 topEnd = 16.dp
-                                            )
-                                        ),
+                                            )                                        ),
                                     contentPadding = PaddingValues(1.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.White)
                                 ) {
@@ -225,7 +231,7 @@ class MainActivity : ComponentActivity() {
                 .padding(16.dp)
         ) {
 
-            Text(text = "Select Drawing Color", fontWeight = FontWeight.Bold)
+            Text(text = "Select Drawing Color", fontWeight = FontWeight.Bold, color=Color.White)
             Spacer(modifier = Modifier.height(8.dp))
             LazyRow {
                 items(drawingPalette) { color ->
@@ -243,7 +249,7 @@ class MainActivity : ComponentActivity() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = "Select Background Color", fontWeight = FontWeight.Bold)
+            Text(text = "Select Background Color", fontWeight = FontWeight.Bold, color=Color.White)
             Spacer(modifier = Modifier.height(8.dp))
             LazyRow {
                 items(backgroundPalette) { color ->
@@ -262,7 +268,7 @@ class MainActivity : ComponentActivity() {
 
             // Switch for enabling random drawing color
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Random Drawing Color", modifier = Modifier.weight(1f))
+                Text(text = "Random Drawing Color", modifier = Modifier.weight(1f), color=Color.White)
                 Switch(
                     checked = isRandomColorEnabled,
                     onCheckedChange = { isRandomColorEnabled = it; onRandomColorSelected(isRandomColorEnabled) }
@@ -322,6 +328,7 @@ class MainActivity : ComponentActivity() {
     }
     @Composable
     fun RightMenu(customSurfaceView: CustomSurfaceView) {
+        val isDrawModeActive = remember { mutableStateOf(customSurfaceView.isDrawModeActive()) }
         Log.i(TAG, "right menu created ${customSurfaceView.getDropsSize()}")
             Column(
                 modifier = Modifier
@@ -333,8 +340,12 @@ class MainActivity : ComponentActivity() {
                 RoundedButton (
                     onClick = {
                         customSurfaceView.toggleDrawingMode()
+                        isDrawModeActive.value = customSurfaceView.isDrawModeActive()
                     },
-                    icon = if(customSurfaceView.isDrawModeActive()) painterResource(id = R.drawable.icon_drop) else painterResource(id = R.drawable.icon_lipstick),
+                    icon = if(isDrawModeActive.value)
+                        painterResource(id = R.drawable.icon_drop)
+                    else
+                        painterResource(id = R.drawable.icon_lipstick),
                     modifier = Modifier
                 )
                 RoundedButton (
@@ -342,7 +353,7 @@ class MainActivity : ComponentActivity() {
                         customSurfaceView.clear()
                     },
                     icon = painterResource(id = R.drawable.icon_clear),
-                    modifier =Modifier
+                    modifier = Modifier
                 )
                 RoundedButton (
                     onClick = {
@@ -350,7 +361,7 @@ class MainActivity : ComponentActivity() {
                         customSurfaceView.undo()
                     },
                     icon = painterResource(id = R.drawable.icon_undo),
-                    modifier =Modifier
+                    modifier = Modifier
                 )
                 RoundedButton (
                     onClick = {

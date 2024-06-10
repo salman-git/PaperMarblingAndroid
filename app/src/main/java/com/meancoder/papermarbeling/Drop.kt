@@ -47,9 +47,10 @@ class Drop(x: Float, y: Float, r: Float, paint: Paint) {
         val C = PointF(x, y) //center of arc
         val u = 1 / Math.pow(2.0, (1 / c).toDouble()).toFloat()
         for (v in vertices) {
-            val mag = sqrt((v.x - C.x) * (v.x - C.x) + (v.y - C.y) * (v.y - C.y))
+            val mag = sqrt((v.x - C.x) * (v.x - C.x) + (v.y - C.y) * (v.y - C.y)) //h
+
             val d = Math.abs(mag - r)
-            val l = z * Math.pow(u.toDouble(), d.toDouble())
+            val l = z * Math.pow(u.toDouble(), (r * -1f).toDouble())//z * Math.pow(u.toDouble(), d.toDouble())
             var alpha = l / mag
             val translatedX = v.x - C.x
             val translatedY = v.y - C.y
@@ -64,8 +65,13 @@ class Drop(x: Float, y: Float, r: Float, paint: Paint) {
             val rotatedY = translatedX * sinAlpha + translatedY * cosAlpha
 
             // Translate back to original position
-            v.x = (rotatedX + C.x).toFloat()
-            v.y = (rotatedY + C.y).toFloat()
+            if (mag > 0) {
+                v.x = (rotatedX + C.x).toFloat()
+                v.y = (rotatedY + C.y).toFloat()
+            } else {
+                v.x = C.x
+                v.y = C.y
+            }
         }
     }
 
