@@ -43,14 +43,14 @@ class Drop(x: Float, y: Float, r: Float, paint: Paint) {
         }
     }
 
-    fun circularTine(x:Float, y:Float, z:Float, c:Float, r:Float, clockWise:Boolean=true) {
+    fun circularTine(x:Float, y:Float, z:Float, c:Float, r:Float, clockWise:Boolean=true, isSpiral:Boolean=false) {
         val C = PointF(x, y) //center of arc
         val u = 1 / Math.pow(2.0, (1 / c).toDouble()).toFloat()
         for (v in vertices) {
             val mag = sqrt((v.x - C.x) * (v.x - C.x) + (v.y - C.y) * (v.y - C.y)) //h
 
             val d = Math.abs(mag - r)
-            val l = z * Math.pow(u.toDouble(), (r * -1f).toDouble())//z * Math.pow(u.toDouble(), d.toDouble())
+            val l = if(isSpiral) z * Math.pow(u.toDouble(), (r * -1f).toDouble()) else z * Math.pow(u.toDouble(), d.toDouble())
             var alpha = l / mag
             val translatedX = v.x - C.x
             val translatedY = v.y - C.y

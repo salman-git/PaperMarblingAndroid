@@ -11,7 +11,9 @@ enum class PEN_TYPE {
     COMB_VERTICAL,
     PEN,
     CIRCULAR_CLOCKWISE,
-    CIRCULAR_ANTICLOCKWISE
+    CIRCULAR_ANTICLOCKWISE,
+    SPIRAL_CLOCKWISE,
+    SPIRAL_ANTICLOCKWISE
 }
 val backgroundPalette: MutableList<Int> = mutableListOf(
     Color.rgb(255,255,255),

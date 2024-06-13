@@ -87,9 +87,15 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                     }
                     dropThread.start()
                 } else if (currentDrawingMode == DrawingMode.MODE_TINE) {
-                    if(currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE || currentTineTool == PEN_TYPE.CIRCULAR_ANTICLOCKWISE) {
+                    if(currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE ||
+                        currentTineTool == PEN_TYPE.CIRCULAR_ANTICLOCKWISE ||
+                        currentTineTool  == PEN_TYPE.SPIRAL_ANTICLOCKWISE ||
+                        currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE
+                        ) {
                         dropThread = DropThread(x, y, Paint()) { x, y, r, paint ->
-                            circularTine(x, y, 4f, 32f, 100f, isClockwise = currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE)
+                            circularTine(x, y, 4f, 32f, 100f,
+                                isClockwise = currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE || currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE,
+                                isSpiral=currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE || currentTineTool == PEN_TYPE.SPIRAL_ANTICLOCKWISE)
                         }
                         dropThread.start()
                     }
@@ -169,10 +175,11 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
         z: Float,
         c: Float,
         r: Float = 100f,
-        isClockwise: Boolean
+        isClockwise: Boolean,
+        isSpiral:Boolean
     ) {
         for (other in drops!!) {
-            other.circularTine(x, y, z, c, r, isClockwise)
+            other.circularTine(x, y, z, c, r, isClockwise, isSpiral)
         }
     }
 
