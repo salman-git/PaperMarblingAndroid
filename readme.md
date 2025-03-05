@@ -12,17 +12,20 @@ Paper Marbling is a digital art app that lets you create stunning marbled patter
 - 🚀 **Smooth & Responsive UI** – Designed for an intuitive and fun user experience.
 
 ## 📸 Screenshots
-(Include relevant images or GIFs showcasing the app in action)
+<div style="display: flex; gap: 10px;">
+  <img src="./screenshots/phoneholders-export(8).png" alt="output1" width="250"/>
+  <img src="./screenshots/phoneholders-export(7).png" alt="output2" width="250"/>
+  <img src="./screenshots/phoneholders-export(3).png" alt="output3" width="250"/>
+  <img src="./screenshots/phoneholders-export(4).png" alt="output3" width="250"/>
+  <img src="./screenshots/phoneholders-export(6).png" alt="output3" width="250"/>
+  <img src="./screenshots/phoneholders-export(5).png" alt="output3" width="250"/>
+
+</div>
 
 ## 🔗 Download
 **Get the app on Google Play:** 
-https://play.google.com/store/apps/details?id=com.meancoder.papermarbeling&hl=en
 
-## 🛠️ How to Use
-1. Select a marbling tool from the menu.
-2. Adjust the settings to fine-tune your pattern.
-3. Swipe on the canvas to create beautiful swirls.
-4. Save and share your artwork!
+[Paper Marbling Android](https://play.google.com/store/apps/details?id=com.meancoder.papermarbeling) 
 
 ## 💻 Tech Stack
 - **Android (Jetpack Compose)** – For a modern UI experience.
