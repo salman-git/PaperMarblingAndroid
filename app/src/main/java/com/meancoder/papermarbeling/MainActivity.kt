@@ -12,6 +12,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,11 +39,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -143,12 +146,27 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     ColorsMenu(customSurfaceView)
                                 }
+                                var combWidth by remember { mutableFloatStateOf(100f) }
+                                var radius by remember { mutableFloatStateOf(100f) }
+                                var speed by remember { mutableFloatStateOf(10f) }
                                 AnimatedVisibility(
                                     visible = isToolsMenuVisible,
                                     enter = slideInVertically(initialOffsetY = { it }),
                                     exit = slideOutVertically(targetOffsetY = { it })
                                 ) {
-                                    ToolsMenu(customSurfaceView)
+                                    ToolsMenu(customSurfaceView, combWidth, radius, speed,
+                                        onCombWidthChange = {
+                                            combWidth=it
+                                            customSurfaceView.setCombWidth(it)
+                                                            },
+                                        onRadiusChange = {
+                                            radius=it
+                                            customSurfaceView.setRadius(it)
+                                                         },
+                                        onSpeedChange={
+                                            speed=it
+                                            customSurfaceView.setSpeed(it)
+                                        })
                                 }
                                 AnimatedVisibility(
                                     visible = isOptionsMenuVisible,
@@ -339,7 +357,13 @@ class MainActivity : ComponentActivity() {
     )
 
     @Composable
-    fun ToolsMenu(customSurfaceView:CustomSurfaceView) {
+    fun ToolsMenu(customSurfaceView:CustomSurfaceView,
+                  combWidth:Float,
+                  radius:Float,
+                  speed:Float,
+                  onCombWidthChange:(Float) -> Unit,
+                  onSpeedChange:(Float) -> Unit,
+                  onRadiusChange:(Float) -> Unit ) {
 
         val toolButtons = arrayOf(
             ToolButton(
@@ -384,20 +408,66 @@ class MainActivity : ComponentActivity() {
             },
             icon = painterResource(id = R.drawable.icon_spiral_clockwise),
         ))
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(16.dp)),
             ) {
+            var currentTineTool by remember { mutableStateOf(customSurfaceView.getCurrentTineTool()) }
 
-            
+            Column(modifier=Modifier.padding(8.dp)) {
+                if(currentTineTool == PEN_TYPE.COMB_HORIZONTAL || currentTineTool == PEN_TYPE.COMB_VERTICAL)
+                    Column(){
+                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(text = "Comb Width", color=Color.White)
+                            Text(text = kotlin.math.floor(combWidth).toInt().toString(), color=Color.White)
+                        }
+                        Slider(
+                            value = combWidth,
+                            onValueChange = onCombWidthChange,
+                            valueRange = 50f..400f,
+                            steps = 6
+                        )
+                    }
+                if(currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE || currentTineTool == PEN_TYPE.CIRCULAR_ANTICLOCKWISE)
+                    Column {
+                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(text = "Radius", color=Color.White)
+                            Text(text = kotlin.math.floor(radius).toInt().toString(), color=Color.White)
+                        }
+                        Slider(
+                            value = radius,
+                            onValueChange = onRadiusChange,
+                            valueRange = 50f..400f,
+                            steps = 6
+                        )
+                    }
+                if(currentTineTool == PEN_TYPE.SPIRAL_ANTICLOCKWISE || currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE)
+                    Column {
+                        Row(modifier=Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(text = "Speed", color=Color.White)
+                            Text(text = kotlin.math.floor(speed).toInt().toString(), color=Color.White)
+                        }
+                        Slider(
+                            value = speed,
+                            onValueChange = onSpeedChange,
+                            valueRange = 10f..100f,
+                            steps = 8
+                        )
+                        Text(text = "Spiral Radius", color=Color.White)
+                    }
+            }
 
             LazyRow(
                 modifier = Modifier
                     .padding(8.dp, 16.dp)
             ) {
                 items(toolButtons) {button ->
-                    RoundedButton(modifier = Modifier, onClick = button.onClick, icon = button.icon)
+                    RoundedButton(modifier = Modifier, onClick = {
+                        button.onClick()
+                        currentTineTool = customSurfaceView.getCurrentTineTool()
+                                                                 }, icon = button.icon)
                 }
             }
         }

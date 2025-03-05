@@ -30,6 +30,10 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
     private var drawingColor: Int = Color.rgb(0, 0, 0)
     private var isRandomDrawingColor: Boolean = true
 
+    private var radius:Float = 100f
+    private var spiralRadius:Float = 100f
+    private var combWidth:Float = 100f
+
     constructor(context: Context?) : super(context) {
         init()
     }
@@ -93,7 +97,7 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                         currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE
                         ) {
                         dropThread = DropThread(x, y, Paint()) { x, y, r, paint ->
-                            circularTine(x, y, 4f, 32f, 100f,
+                            circularTine(x, y, 4f, 32f, radius, spiralRadius,
                                 isClockwise = currentTineTool == PEN_TYPE.CIRCULAR_CLOCKWISE || currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE,
                                 isSpiral=currentTineTool == PEN_TYPE.SPIRAL_CLOCKWISE || currentTineTool == PEN_TYPE.SPIRAL_ANTICLOCKWISE)
                         }
@@ -120,27 +124,36 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
                         val vector = PointF((dx / mag).toFloat(), (dy / mag).toFloat())
                         if (currentTineTool == PEN_TYPE.COMB_VERTICAL) {
 //                            combTine(vector, X, Y, 80f, 8f, 100f)
-                            var xC = X
-                            while (xC > 0) {
-                                tineLine(vector, xC.toFloat(), 0f, 2f, 16f)
-                                xC -= 100
-                            }
-                            var xC2 = X
-                            while (xC2 < width) {
-                                tineLine(vector, xC2.toFloat(), 0f, 2f, 16f)
-                                xC2 += 100
+                            val sliceSize = combWidth.toInt()
+                            var xLeft = firstPoint.x
+                            var xRight = firstPoint.x
+
+                            while (xLeft > 0 || xRight < width) {
+                                if (xLeft > 0) {
+                                    tineLine(vector, xLeft.toFloat(), 0f, 2f, 16f)
+                                    xLeft -= sliceSize
+                                }
+                                if (xRight < width) {
+                                    tineLine(vector, xRight.toFloat(), 0f, 2f, 16f)
+                                    xRight += sliceSize
+                                }
                             }
                         } else if (currentTineTool == PEN_TYPE.COMB_HORIZONTAL) {
-                            var xC = Y
-                            while (xC > 0) {
-                                tineLine(vector, 0f, xC, 2f, 16f)
-                                xC -= 100
+                            val sliceSize = combWidth.toInt()
+                            var yUp = firstPoint.y
+                            var yDown = firstPoint.y
+
+                            while (yUp > 0 || yDown < height) {
+                                if (yUp > 0) {
+                                    tineLine(vector, 0f, yUp.toFloat(), 2f, 16f)
+                                    yUp -= sliceSize
+                                }
+                                if (yDown < height) {
+                                    tineLine(vector, 0f, yDown.toFloat(), 2f, 16f)
+                                    yDown += sliceSize
+                                }
                             }
-                            var xC2 = Y
-                            while (xC2 < height) {
-                                tineLine(vector,0f, xC2, 2f, 16f)
-                                xC2 += 100
-                            }
+
                         } else if (currentTineTool == PEN_TYPE.PEN) {
                             tineLine(vector, X, Y, 2f, 16f)
                         }
@@ -175,11 +188,14 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
         z: Float,
         c: Float,
         r: Float = 100f,
+        spiralRadius:Float=100f,
         isClockwise: Boolean,
         isSpiral:Boolean
     ) {
+        val radius = if (isSpiral) spiralRadius else r
         for (other in drops!!) {
-            other.circularTine(x, y, z, c, r, isClockwise, isSpiral)
+
+            other.circularTine(x, y, z, c, radius, isClockwise, isSpiral)
         }
     }
 
@@ -261,6 +277,16 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
         drawingColor = color
     }
 
+    fun setCombWidth(value:Float) {
+        combWidth = value
+    }
+    fun setSpeed(value:Float){
+        spiralRadius=value
+    }
+    fun setRadius(value:Float) {
+        radius = value
+    }
+
     fun isDrawModeActive(): Boolean {
         return currentDrawingMode == DrawingMode.MODE_NORMAL
     }
@@ -279,5 +305,9 @@ class CustomSurfaceView : SurfaceView, SurfaceHolder.Callback {
             drops?.add(lastUndoneDrop)
             undoStack.push(lastUndoneDrop)
         }
+    }
+
+    fun getCurrentTineTool(): PEN_TYPE? {
+        return currentTineTool
     }
 }
